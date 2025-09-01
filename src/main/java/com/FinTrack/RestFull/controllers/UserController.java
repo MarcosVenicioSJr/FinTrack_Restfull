@@ -6,6 +6,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.FinTrack.RestFull.Mapping.UserMapping;
 import com.FinTrack.RestFull.models.User;
+import com.FinTrack.RestFull.models.Requests.LoginRequest;
 import com.FinTrack.RestFull.models.Requests.UserRequest;
 import com.FinTrack.RestFull.services.UserServices;
 
@@ -25,17 +26,22 @@ public class UserController {
   @Autowired
   private UserMapping userMapping;
 
-  @PostMapping("user")
+  @PostMapping("create")
   public ResponseEntity<String> createUser(@RequestBody UserRequest entity) {
 
     User user = userMapping.mapperRequestCreateUserToUser(entity);
-
-
     userServices.createUser(user);
     
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(user.getId()).toUri();
     return ResponseEntity.created(uri).body("Usuario criado com sucesso");
+  }
+
+  @PostMapping("login")
+  public ResponseEntity<String> loginUser(@RequestBody LoginRequest request){
+    userServices.loginUser(request.getEmail(), request.getPassword());
+
+    return ResponseEntity.ok("Login realizado com sucesso");
   }
 
 }

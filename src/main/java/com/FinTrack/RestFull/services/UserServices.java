@@ -27,6 +27,13 @@ public class UserServices {
     userRepository.save(user);
   }
 
+  public void loginUser(String email, String password) {
+    User user = userRepository.findByEmail(email);
+    if (user == null || !user.getPassword().equals(password)) {
+      throw new RuntimeException("Email ou senha invalidos");
+    }
+  }
+
   private boolean emailExists(String email) {
     return userRepository.findByEmail(email) != null;
   }
